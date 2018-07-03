@@ -19,11 +19,9 @@ public class ListInfo {
     private List<String> nameHistory;
 
     private int totalScore;
-    private int totalWeight;
 
     public ListInfo(Map<String, Integer> nameAmounts, Map<String, Integer> nameScores, List<String> names, int numInstances, List<String> history) {
         this.totalScore = -1;
-        this.totalWeight = -1;
         this.nameAmounts = nameAmounts;
         this.nameScores = nameScores;
         this.names = names;
@@ -100,25 +98,18 @@ public class ListInfo {
         String name = names.get(position);
         int amount = nameAmounts.get(name);
         int score = nameScores.get(name);
-        int minimumScore = Collections.min(nameScores.values());
-        int maximumScore = Collections.max(nameScores.values());
         String base = name;
 
-        int weight = this.totalScore - (score - minimumScore) * 10;
 
         if (score != 0) {
             base = score + " - " + base;
         }
 
-        Log.d("NAMES", "[Debug] User " + name + " Am: " + amount + " Score: " + score + " minScore: " + minimumScore + " maxScore: " + maximumScore +" Weight: " + weight + " Total" + this.totalWeight);
-
         base = amount == 1 ? base : base + " (" + String.valueOf(amount) + ")";
 
-        if (this.totalWeight != 0) {
-            int newWeight = maximumScore + 2 - (score + 1);
-            //float percent = (float)weight / (float)this.totalWeight * 100;
-            float percent = (float)newWeight / (float)(maximumScore + 2) * 100;
-            return base + " (" + String.format("%.3g%n", percent) + "%)";
+        if (this.totalScore != 0) {
+            float percent = this.getPercentageForScore(score) / (float)this.totalScore * 100;
+            return base + " (" + String.format("%.3g", percent) + "%)";
         }
 
         return base;
@@ -184,13 +175,18 @@ public class ListInfo {
     private void calculateTotalScoreAndWeight() {
         if (totalScore == -1) {
             this.totalScore = 0;
-            int minimumScore = Collections.min(nameScores.values());
-            int maximumScore = Collections.max(nameScores.values());
             for (int score : nameScores.values()) {
-                this.totalScore += (score - minimumScore) * 10;
+                float percentage = getPercentageForScore(score);
+                this.totalScore += (int)percentage;
             }
-
-            this.totalWeight = this.totalScore * (this.names.size() - 1);
         }
+    }
+
+    private float getPercentageForScore(int score) {
+        int maximumScore = Collections.max(nameScores.values());
+
+        int weight = maximumScore + 2 - (score + 1);
+
+        return (float)weight / (float)(maximumScore + 2) * 100;
     }
 }

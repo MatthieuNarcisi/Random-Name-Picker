@@ -36,22 +36,17 @@ public class NameUtils {
         }
 
         // Calculation of the weight
-        int totalScore = 0;
-        for (int score : nameScores.values()) {
-            totalScore += score + 1;
-        }
-
-        int totalWeight = totalScore * (nameScores.size() - 1);
+        int totalScore = calculateTotalScoreAndWeight(nameScores);
 
         Random random = new Random();
         List<Integer> chosenNumbers = new ArrayList<>();
 
         while (chosenNumbers.size() < numNumbers) {
-            int randomWeight = random.nextInt(totalWeight) + 1;
+            int randomWeight = random.nextInt(totalScore) + 1;
 
             Object[] scores = nameScores.values().toArray();
             for (int i = 0; i < scores.length && randomWeight > 0; i++) {
-                int weight = totalScore - (int)scores[i] - 1;
+                int weight = (int)getPercentageForScore(nameScores, (int)scores[i]);
                 randomWeight -= weight;
 
                 if (randomWeight <= 0 && !chosenNumbers.contains(i)) {
@@ -65,6 +60,24 @@ public class NameUtils {
 //            chosenNumbers.add(list.get(i));
 //        }
         return chosenNumbers;
+    }
+
+    private static int calculateTotalScoreAndWeight(Map<String, Integer> nameScores) {
+        int totalScore = 0;
+        for (int score : nameScores.values()) {
+            float percentage = getPercentageForScore(nameScores, score);
+            totalScore += (int)percentage;
+        }
+
+        return totalScore;
+    }
+
+    private static float getPercentageForScore(Map<String, Integer> nameScores, int score) {
+        int maximumScore = Collections.max(nameScores.values());
+
+        int weight = maximumScore + 2 - (score + 1);
+
+        return (float)weight / (float)(maximumScore + 2) * 100;
     }
 
     public static String getFileName(String filePath) {
