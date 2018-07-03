@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Random Name Picker</string>
+    <string name="app_name">Scout Name Picker</string>
     <string name="settings">Settings</string>
     <string name="no_lists_message">You currently do not have any name lists.</string>
     <string name="add_list_hint">List name</string>
@@ -18,7 +18,9 @@
     <!-- Icons -->
     <string name="edit_icon">{ion-edit}</string>
     <string name="trash_icon">{ion-android-delete}</string>
-    <string name="delete_icon">{ion-android-remove-circle}</string>
+    <string name="delete_icon">{ion-android-delete}</string>
+    <string name="minus_icon">{ion-android-remove-circle}</string>
+    <string name="plus_icon">{ion-android-add-circle}</string>
 
     <string name="welcome">Welcome</string>
     <string name="view_tutorial">View tutorial</string>
